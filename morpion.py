@@ -1,10 +1,9 @@
-from tkinter import *
+from tkinter import Canvas,Tk
 from collections import Counter
-import random
 import time
 
 global case, Cases, win
-
+tour = 1 
 X=[]
 O=[]
 case= {"0":(100,100,0,0),"1":(300,100,1,0),"2":(500,100,2,0),"3":(100,300,0,1),"4":(300,300,1,1),"5":(500,300,2,1),"6":(100,500,0,2),"7":(300,500,1,2),"8":(500,500,2,2)}
@@ -12,7 +11,7 @@ Cases=[0,1,2,3,4,5,6,7,8]
 
 
 fenetre=Tk()
-princ = Canvas(fenetre, width=600, height= 600, background = "black")
+princ = Canvas(fenetre, width=600, height= 600, background = "red")
 ligne1 = princ.create_line(200,0,200,600,fill="white")
 ligne2 = princ.create_line(400,0,400,600,fill="white")
 ligne3 = princ.create_line(0,200,600,200,fill="white")
@@ -30,10 +29,11 @@ def victoire(joueur):
         for num in l:
             c1.append(case[str(num)][3])
             
+            
         c2=[]
         for num in l:
             c2.append(case[str(num)][2])
-        
+            
         
         if Counter(c1).most_common(1)[0][1]==3:
             return False
@@ -51,42 +51,65 @@ def victoire(joueur):
         
         
 def jeu(evt):
-    global X,O
-         
-    if evt.x<200 and evt.y<200:
-        X.append(0)
-    elif evt.x>200 and evt.x<400 and evt.y<200:
-        X.append(1)
-    elif evt.x>400 and evt.x<600 and evt.y<200:
-        X.append(2)
-    elif evt.x<200 and evt.y>200 and evt.y<400:
-        X.append(3) 
-    elif evt.x>200 and evt.x<400 and evt.y<400 and evt.y > 200:
-        X.append(4)
-    elif evt.x>400 and evt.x<600 and evt.y<400 and evt.y > 200:
-        X.append(5)
-    elif evt.x<200 and evt.y>400 and evt.y<600:
-        X.append(6)
-    elif evt.x>200 and evt.x<400 and evt.y<600 and evt.y > 400:
-        X.append(7)
+    global X,O,tour,bg
+    if tour%2 == 1:    
+        if evt.x<200 and evt.y<200 and 0 not in O:
+            X.append(0)
+        elif evt.x>200 and evt.x<400 and evt.y<200 and 1 not in O:
+            X.append(1)
+        elif evt.x>400 and evt.x<600 and evt.y<200 and 2 not in O:
+            X.append(2)
+        elif evt.x<200 and evt.y>200 and evt.y<400 and 3 not in O:
+            X.append(3) 
+        elif evt.x>200 and evt.x<400 and evt.y<400 and evt.y > 200 and 4 not in O:
+            X.append(4)
+        elif evt.x>400 and evt.x<600 and evt.y<400 and evt.y > 200 and 5 not in O:
+            X.append(5)
+        elif evt.x<200 and evt.y>400 and evt.y<600 and 6 not in O:
+            X.append(6)
+        elif evt.x>200 and evt.x<400 and evt.y<600 and evt.y > 400 and 7 not in O:
+            X.append(7)
+        elif 8 not in O:
+            X.append(8)
     else:
-        X.append(8)
-      
+        if evt.x<200 and evt.y<200 and 0 not in X:
+            O.append(0)
+        elif evt.x>200 and evt.x<400 and evt.y<200 and 1 not in X:
+            O.append(1)
+        elif evt.x>400 and evt.x<600 and evt.y<200 and 2 not in X:
+            O.append(2)
+        elif evt.x<200 and evt.y>200 and evt.y<400 and 3 not in X:
+            O.append(3) 
+        elif evt.x>200 and evt.x<400 and evt.y<400 and evt.y > 200 and 4 not in X: 
+            O.append(4)
+        elif evt.x>400 and evt.x<600 and evt.y<400 and evt.y > 200 and 5 not in X:
+            O.append(5)
+        elif evt.x<200 and evt.y>400 and evt.y<600 and 6 not in X:
+            O.append(6)
+        elif evt.x>200 and evt.x<400 and evt.y<600 and evt.y > 400 and 7 not in X:
+            O.append(7)
+        elif 8 not in X:
+            O.append(8)
+            
     while victoire(X)==True and victoire(O)==True and len(X)!=5:
-        princ.create_text(case[str(X[-1])][0], case[str(X[-1])][1], text="X", fill="white", font=("Raleway",100,"bold"))
-        Cases.remove(X[-1])
-        victoire(X)       
-        print(X)
-        print(Cases)
-        fenetre.update()
-        time.sleep(0.5)
-        O.append(random.choice(Cases))
-        princ.create_text(case[str(O[-1])][0], case[str(O[-1])][1], text="O", fill="white", font=("Raleway",100,"bold"))
-        victoire(O)
-        Cases.remove(O[-1])
-        print(O)
-        print(Cases)
-          
+        if tour%2 ==1:
+            princ.create_text(case[str(X[-1])][0], case[str(X[-1])][1], text="X", fill="white", font=("Raleway",100,"bold"))
+            Cases.remove(X[-1])
+            victoire(X)       
+            fenetre.update()
+            tour += 1
+            princ.configure(bg='blue')
+            
+            
+        else: 
+            time.sleep(0.1)
+            princ.create_text(case[str(O[-1])][0], case[str(O[-1])][1], text="O", fill="white", font=("Raleway",100,"bold"))
+            victoire(O)
+            Cases.remove(O[-1])
+            fenetre.update()
+            tour += 1
+            princ.configure(bg='red')
+            
 
     time.sleep(0.85)    
 
